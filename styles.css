@@ -1,10 +1,10 @@
 :root {
   --bg-color: #ebebeb;
-  --card-bg: rgba(30, 35, 45, 0.6);
+  --card-bg: rgba(255, 255, 255, 0.6);
   --input-bg: rgba(255, 255, 255, 0.05);
   --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
   --accent-color: #a855f7;
-  --text-primary: #ffffff;
+  --text-primary: #000000;
   --text-secondary: #94a3b8;
   --danger: #ef4444;
   --success: #22c55e;
@@ -48,9 +48,19 @@ header h1 {
   text-align: center;
 }
 
+.recent-list-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #22c55e;
+  margin-top: 24px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
 .balance-card {
   background: var(--primary-gradient);
-  padding: 20px 24px;
+  color: #ebebeb;
+  padding: 15px 24px;
   border-radius: var(--radius-lg);
   text-align: center;
   box-shadow: 0 10px 30px -10px rgba(168, 85, 247, 0.4);
@@ -81,7 +91,7 @@ header h1 {
 }
 
 .total-amount {
-  font-size: 3.5rem;
+  font-size: 2rem;
   font-weight: 700;
   letter-spacing: -1px;
 }
@@ -105,6 +115,8 @@ header h1 {
 
 .form-row {
   margin-bottom: 16px;
+  border: 1px solid #00000059;
+  border-radius: var(--radius-md);
 }
 
 input {
