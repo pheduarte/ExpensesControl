@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finance Control</title>
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <header>
+        <h1>My Expenses</h1>
+        <div class="balance-card">
+          <span class="currency-symbol">$</span>
+          <span class="total-amount" id="total-amount">0.00</span>
+          <p class="balance-label">Total Spent</p>
+        </div>
+      </header>
+
+      <main>
+        <div class="input-group">
+          <form id="expense-form">
+            <div class="form-row">
+              <input
+                type="number"
+                id="amount"
+                placeholder="0.00"
+                step="0.01"
+                required
+              />
+            </div>
+            <div class="form-row">
+              <input
+                type="text"
+                id="description"
+                placeholder="What for?"
+                required
+                autocomplete="off"
+              />
+            </div>
+            <div class="form-row">
+              <input type="date" id="date" required />
+            </div>
+            <button type="submit" id="add-btn">
+              <span class="icon">+</span> Add Expense
+            </button>
+          </form>
+        </div>
+
+        <div class="transactions-section">
+          <h2>Recent</h2>
+          <ul id="expense-list" class="expense-list">
+            <!-- Items will be injected here -->
+          </ul>
+        </div>
+      </main>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
