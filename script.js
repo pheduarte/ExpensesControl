@@ -126,57 +126,16 @@ function saveData() {
 // Set today's date on load
 document.getElementById('date').valueAsDate = new Date();
 
-
-  let startX = 0;
-  let currentX = 0;
-  let isSwiping = false;
-
-  item.addEventListener("touchstart", e => {
-    startX = e.touches[0].clientX;
-    isSwiping = true;
-    item.style.transition = "none";
-  });
-
-  item.addEventListener("touchmove", e => {
-    if (!isSwiping) return;
-
-    currentX = e.touches[0].clientX;
-    const deltaX = currentX - startX;
-
-    if (deltaX < 0) {
-      item.style.transform = `translateX(${deltaX}px)`;
-    }
-  });
-
-  item.addEventListener("touchend", () => {
-    isSwiping = false;
-    item.style.transition = "transform 0.2s ease";
-
-    const threshold = -80; // px to trigger delete
-    const finalX = currentX - startX;
-
-    if (finalX < threshold) {
-      item.style.transform = "translateX(-100%)";
-      item.style.opacity = "0";
-
-      setTimeout(() => {
-        item.remove();
-        updateTotal(); // important if you track totals
-      }, 200);
-    } else {
-      item.style.transform = "translateX(0)";
-    }
-  })
-
-  function enableSwipeToDelete(item, expenseId) {
+function enableSwipeToDelete(item, expenseId) {
   let startX = 0;
   let currentX = 0;
   let isSwiping = false;
 
   item.addEventListener("touchstart", (e) => {
     startX = e.touches[0].clientX;
-    currentX = startX;              // ✅ important
+    currentX = startX; // ✅ prevents tap = accidental delete
     isSwiping = true;
+
     item.style.transition = "none";
   }, { passive: true });
 
@@ -186,26 +145,27 @@ document.getElementById('date').valueAsDate = new Date();
     currentX = e.touches[0].clientX;
     const deltaX = currentX - startX;
 
-    // only swipe left
+    // swipe left only
     if (deltaX < 0) {
       item.style.transform = `translateX(${deltaX}px)`;
     }
   }, { passive: true });
 
   item.addEventListener("touchend", () => {
+    if (!isSwiping) return;
     isSwiping = false;
+
+    const deltaX = currentX - startX;
+    const threshold = -80;
+
     item.style.transition = "transform 0.2s ease, opacity 0.2s ease";
 
-    const threshold = -80;
-    const finalX = currentX - startX;
-
-    if (finalX < threshold) {
+    if (deltaX < threshold) {
       item.style.transform = "translateX(-110%)";
       item.style.opacity = "0";
 
       setTimeout(() => {
-        // ✅ delete from data, persist, and re-render
-        expenses = expenses.filter((x) => x.id !== expenseId);
+        expenses = expenses.filter(x => x.id !== expenseId);
         saveData();
         renderAll();
       }, 200);
@@ -220,4 +180,3 @@ document.getElementById('date').valueAsDate = new Date();
     item.style.transform = "translateX(0)";
   });
 }
-

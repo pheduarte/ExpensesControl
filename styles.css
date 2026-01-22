@@ -212,6 +212,14 @@ button[type="submit"]:active {
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
+.expense-item::before {
+  content: "Delete";
+  position: absolute;
+  right: 20px;
+  color: white;
+  font-weight: 600;
+}
+
 @keyframes slideIn {
   to {
     opacity: 1;
