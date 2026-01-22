@@ -106,7 +106,7 @@ function renderList() {
 
     list.appendChild(item);
 
-    enableSwipeToDelete(item);
+    enableSwipeToDelete(item, expense.id);
   });
 }
 
@@ -126,7 +126,7 @@ function saveData() {
 // Set today's date on load
 document.getElementById('date').valueAsDate = new Date();
 
-function enableSwipeToDelete(item) {
+
   let startX = 0;
   let currentX = 0;
   let isSwiping = false;
@@ -166,5 +166,58 @@ function enableSwipeToDelete(item) {
     } else {
       item.style.transform = "translateX(0)";
     }
+  })
+
+  function enableSwipeToDelete(item, expenseId) {
+  let startX = 0;
+  let currentX = 0;
+  let isSwiping = false;
+
+  item.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+    currentX = startX;              // ✅ important
+    isSwiping = true;
+    item.style.transition = "none";
+  }, { passive: true });
+
+  item.addEventListener("touchmove", (e) => {
+    if (!isSwiping) return;
+
+    currentX = e.touches[0].clientX;
+    const deltaX = currentX - startX;
+
+    // only swipe left
+    if (deltaX < 0) {
+      item.style.transform = `translateX(${deltaX}px)`;
+    }
+  }, { passive: true });
+
+  item.addEventListener("touchend", () => {
+    isSwiping = false;
+    item.style.transition = "transform 0.2s ease, opacity 0.2s ease";
+
+    const threshold = -80;
+    const finalX = currentX - startX;
+
+    if (finalX < threshold) {
+      item.style.transform = "translateX(-110%)";
+      item.style.opacity = "0";
+
+      setTimeout(() => {
+        // ✅ delete from data, persist, and re-render
+        expenses = expenses.filter((x) => x.id !== expenseId);
+        saveData();
+        renderAll();
+      }, 200);
+    } else {
+      item.style.transform = "translateX(0)";
+    }
+  });
+
+  item.addEventListener("touchcancel", () => {
+    isSwiping = false;
+    item.style.transition = "transform 0.2s ease";
+    item.style.transform = "translateX(0)";
   });
 }
+
