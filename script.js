@@ -31,7 +31,7 @@ function hideForm() {
     // Wait for animation to finish before showing button again
     setTimeout(() => {
         toggleBtn.style.display = 'flex';
-    }, 300); // Matches CSS transition time roughly
+    }, 100); // Matches CSS transition time roughly
     
     // Reset form on cancel if desired, or keep draft. Let's reset for clean UI.
     form.reset();
@@ -43,14 +43,16 @@ function addExpense(e) {
 
   const amount = parseFloat(document.getElementById('amount').value);
   const description = document.getElementById('description').value;
+  const category = document.getElementById('category').value;
   const date = document.getElementById('date').value;
 
-  if (!amount || !description || !date) return;
+  if (!amount || !description || !category || !date) return;
 
   const expense = {
     id: Date.now(),
     amount,
     description,
+    category,
     date,
   };
 
@@ -96,12 +98,15 @@ function renderList() {
     item.innerHTML = `
       <div class="item-left">
         <span class="item-desc">${expense.description}</span>
+        <span class="item-category">${expense.category}</span>
         <span class="item-date">${dateStr}</span>
       </div>
       <span class="item-amount">-${amountStr}</span>
     `;
 
     list.appendChild(item);
+
+    enableSwipeToDelete(item);
   });
 }
 
@@ -120,3 +125,46 @@ function saveData() {
 
 // Set today's date on load
 document.getElementById('date').valueAsDate = new Date();
+
+function enableSwipeToDelete(item) {
+  let startX = 0;
+  let currentX = 0;
+  let isSwiping = false;
+
+  item.addEventListener("touchstart", e => {
+    startX = e.touches[0].clientX;
+    isSwiping = true;
+    item.style.transition = "none";
+  });
+
+  item.addEventListener("touchmove", e => {
+    if (!isSwiping) return;
+
+    currentX = e.touches[0].clientX;
+    const deltaX = currentX - startX;
+
+    if (deltaX < 0) {
+      item.style.transform = `translateX(${deltaX}px)`;
+    }
+  });
+
+  item.addEventListener("touchend", () => {
+    isSwiping = false;
+    item.style.transition = "transform 0.2s ease";
+
+    const threshold = -80; // px to trigger delete
+    const finalX = currentX - startX;
+
+    if (finalX < threshold) {
+      item.style.transform = "translateX(-100%)";
+      item.style.opacity = "0";
+
+      setTimeout(() => {
+        item.remove();
+        updateTotal(); // important if you track totals
+      }, 200);
+    } else {
+      item.style.transform = "translateX(0)";
+    }
+  });
+}

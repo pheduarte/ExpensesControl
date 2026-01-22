@@ -208,6 +208,8 @@ button[type="submit"]:active {
   animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   opacity: 0;
   transform: translateY(20px);
+  touch-action: pan-y;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 @keyframes slideIn {
@@ -224,8 +226,14 @@ button[type="submit"]:active {
 }
 
 .item-desc {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.item-category {
   font-weight: 500;
   font-size: 1rem;
+  font-weight: 200;
 }
 
 .item-date {
@@ -235,7 +243,7 @@ button[type="submit"]:active {
 
 .item-amount {
   font-weight: 600;
-  color: var(--text-primary);
+  color: #ef4444;
   font-size: 1.1rem;
 }
 
