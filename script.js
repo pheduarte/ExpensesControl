@@ -2,6 +2,11 @@ const form = document.getElementById('expense-form');
 const list = document.getElementById('expense-list');
 const totalDisplay = document.getElementById('total-amount');
 
+// Expandable UI Elements
+const inputGroup = document.getElementById('input-group');
+const toggleBtn = document.getElementById('toggle-input-btn');
+const cancelBtn = document.getElementById('cancel-btn');
+
 // Initialize State
 let expenses = JSON.parse(localStorage.getItem('finance_expenses')) || [];
 
@@ -10,6 +15,28 @@ renderAll();
 
 // Event Listeners
 form.addEventListener('submit', addExpense);
+toggleBtn.addEventListener('click', showForm);
+cancelBtn.addEventListener('click', hideForm);
+
+function showForm() {
+    toggleBtn.style.display = 'none';
+    form.classList.remove('hidden');
+    inputGroup.classList.add('expanded');
+}
+
+function hideForm() {
+    form.classList.add('hidden');
+    inputGroup.classList.remove('expanded');
+    
+    // Wait for animation to finish before showing button again
+    setTimeout(() => {
+        toggleBtn.style.display = 'flex';
+    }, 300); // Matches CSS transition time roughly
+    
+    // Reset form on cancel if desired, or keep draft. Let's reset for clean UI.
+    form.reset();
+    document.getElementById('date').valueAsDate = new Date();
+}
 
 function addExpense(e) {
   e.preventDefault();
@@ -30,10 +57,9 @@ function addExpense(e) {
   expenses.unshift(expense); // Add to beginning of array
   saveData();
   renderAll();
-  form.reset();
   
-  // Set default date to today after reset (UX improvement)
-  document.getElementById('date').valueAsDate = new Date();
+  // Collapse form after adding
+  hideForm();
 }
 
 function renderAll() {

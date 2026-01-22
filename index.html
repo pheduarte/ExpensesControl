@@ -25,8 +25,15 @@
       </header>
 
       <main>
-        <div class="input-group">
-          <form id="expense-form">
+        <div class="input-group" id="input-group">
+          <!-- Toggle Button for Expandable Card -->
+          <button id="toggle-input-btn" class="toggle-input-btn">
+            <span class="icon">+</span>
+            <span>Add Expense</span>
+          </button>
+
+          <!-- The Form (Hidden Initially) -->
+          <form id="expense-form" class="hidden">
             <div class="form-row">
               <input
                 type="number"
@@ -48,9 +55,13 @@
             <div class="form-row">
               <input type="date" id="date" required />
             </div>
-            <button type="submit" id="add-btn">
-              <span class="icon">+</span> Add Expense
-            </button>
+
+            <div class="form-actions">
+              <button type="submit" id="add-btn">Add</button>
+              <button type="button" id="cancel-btn" class="cancel-btn">
+                Cancel
+              </button>
+            </div>
           </form>
         </div>
 
