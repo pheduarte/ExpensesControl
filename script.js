@@ -7,8 +7,13 @@ const inputGroup = document.getElementById('input-group');
 const toggleBtn = document.getElementById('toggle-input-btn');
 const cancelBtn = document.getElementById('cancel-btn');
 
+// Type Selection Elements
+const expenseBtn = document.getElementById('expense-btn');
+const incomeBtn = document.getElementById('income-btn');
+
 // Initialize State
 let expenses = JSON.parse(localStorage.getItem('finance_expenses')) || [];
+let currentType = 'expense'; // Default type
 
 // Initial Render
 renderAll();
@@ -17,6 +22,21 @@ renderAll();
 form.addEventListener('submit', addExpense);
 toggleBtn.addEventListener('click', showForm);
 cancelBtn.addEventListener('click', hideForm);
+
+expenseBtn.addEventListener('click', () => setType('expense'));
+incomeBtn.addEventListener('click', () => setType('income'));
+
+function setType(type) {
+    currentType = type;
+    
+    if (type === 'expense') {
+        expenseBtn.classList.remove('inactive');
+        incomeBtn.classList.remove('active');
+    } else {
+        expenseBtn.classList.add('inactive');
+        incomeBtn.classList.add('active');
+    }
+}
 
 function showForm() {
     toggleBtn.style.display = 'none';
@@ -33,20 +53,31 @@ function hideForm() {
         toggleBtn.style.display = 'flex';
     }, 100); // Matches CSS transition time roughly
     
-    // Reset form on cancel if desired, or keep draft. Let's reset for clean UI.
+    resetForm();
+}
+
+function resetForm() {
     form.reset();
     document.getElementById('date').valueAsDate = new Date();
+    setType('expense'); // Reset to default type
 }
 
 function addExpense(e) {
   e.preventDefault();
 
-  const amount = parseFloat(document.getElementById('amount').value);
+  let amount = parseFloat(document.getElementById('amount').value);
   const description = document.getElementById('description').value;
   const category = document.getElementById('category').value;
   const date = document.getElementById('date').value;
 
   if (!amount || !description || !category || !date) return;
+
+  // Adjust logic based on currentType
+  if (currentType === 'expense') {
+      amount = -Math.abs(amount);
+  } else {
+      amount = Math.abs(amount);
+  }
 
   const expense = {
     id: Date.now(),
@@ -54,13 +85,13 @@ function addExpense(e) {
     description,
     category,
     date,
+    type: currentType
   };
 
-  expenses.unshift(expense); // Add to beginning of array
+  expenses.unshift(expense); 
   saveData();
   renderAll();
   
-  // Collapse form after adding
   hideForm();
 }
 
@@ -92,8 +123,12 @@ function renderList() {
     // Format Currency
     const amountStr = new Intl.NumberFormat('en-US', {
         style: 'currency',
-        currency: 'USD'
+        currency: 'USD',
+        signDisplay: 'always'
     }).format(expense.amount);
+
+    // Determine Logic for Colors
+    const amountClass = expense.amount >= 0 ? 'positive' : 'negative';
 
     item.innerHTML = `
       <div class="item-left">
@@ -101,7 +136,7 @@ function renderList() {
         <span class="item-category">${expense.category}</span>
         <span class="item-date">${dateStr}</span>
       </div>
-      <span class="item-amount">-${amountStr}</span>
+      <span class="item-amount ${amountClass}">${amountStr}</span>
     `;
 
     list.appendChild(item);
@@ -115,7 +150,9 @@ function updateTotal() {
   
   totalDisplay.innerText = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    maximumFractionDigits: 2,
+    style: 'currency',
+    currency: 'USD'
   }).format(total);
 }
 

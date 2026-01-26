@@ -348,3 +348,63 @@ button[type="submit"]:active {
 #add-btn {
   flex: 2; /* Main action takes more space */
 }
+
+.form-rowType {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  margin-bottom: 16px;
+  border: 1px solid #00000059;
+  border-radius: var(--radius-md);
+  padding: 5px;
+}
+
+.expense-btn {
+  background: var(--danger);
+  color: white;
+  font-weight: 500;
+  border: 1px solid var(--danger);
+  flex: 1;
+  width: 50%;
+  height: auto;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.income-btn {
+  background: white;
+  color: var(--success);
+  border: 1px solid var(--success);
+  font-weight: 500;
+  flex: 1;
+  width: 50%;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.income-btn:hover {
+  background: var(--success);
+  color: white;
+}
+/* Active/Inactive States for Type Buttons */
+.expense-btn.inactive {
+  background: white;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+
+.income-btn.active {
+  background: var(--success);
+  color: white;
+}
+
+/* List Item Colors */
+.item-amount.positive {
+  color: var(--success);
+}
+
+.item-amount.negative {
+  color: var(--danger);
+}
